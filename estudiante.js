@@ -563,6 +563,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const descuento = $('#descuento');
   const iva = $('#iva');
 
+  const selectorProveedor = $('#selectorProveedor');
+  const mapaContenedor = $('#mapaContenedor');
+  const mapaProveedor = $('#mapaProveedor');
+
   if (btnGuardar) {
     btnGuardar.addEventListener('click', async (event) => {
       event.preventDefault();
@@ -572,18 +576,16 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('No se encontró el botón #btnGuardar');
   }
 
-  if (btnAgregarItem) {
-    btnAgregarItem.addEventListener('click', (event) => {
-      event.preventDefault();
+  btnAgregarItem?.addEventListener('click', (event) => {
+    event.preventDefault();
 
-      addItem({
-        concepto: '',
-        cantidad: 1,
-        unidad: 'unidad',
-        precio: 0
-      });
+    addItem({
+      concepto: '',
+      cantidad: 1,
+      unidad: 'unidad',
+      precio: 0
     });
-  }
+  });
 
   descuento?.addEventListener('input', calculate);
   iva?.addEventListener('input', calculate);
@@ -611,6 +613,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     await loadRecords();
+  });
+
+  selectorProveedor?.addEventListener('change', () => {
+    const lugar = selectorProveedor.value.trim();
+
+    if (!lugar) {
+      mapaContenedor?.classList.add('oculto');
+
+      if (mapaProveedor) {
+        mapaProveedor.src = '';
+      }
+
+      return;
+    }
+
+    const consulta = encodeURIComponent(lugar);
+
+    if (mapaProveedor) {
+      mapaProveedor.src =
+        `https://www.google.com/maps?q=${consulta}&output=embed`;
+    }
+
+    mapaContenedor?.classList.remove('oculto');
   });
 
   addItem();
